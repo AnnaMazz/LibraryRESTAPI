@@ -132,4 +132,38 @@ public class Library {
         String obj = new Gson().toJson("Libro con ISBN:" + isbn + " eliminato con successo");
         return Response.ok(obj,MediaType.APPLICATION_JSON).build();
     }
+     @POST
+    @Path("/lead")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response lead (@FormParam("IdPrestiti") String id,
+                           @FormParam("Libro")String libro,
+                           @FormParam("Utente") String utente
+                           @FormParam("DataInizio") String dataI)
+                           @FormParam("DataFine") String dataF){
+        if(checkParams(id, libro, utente,dataI,dataF)) {
+            String obj = new Gson().toJson("Parameters must be valid");
+            return Response.serverError().entity(obj).build();
+        }
+        final String QUERY = "INSERT INTO Prestiti(IdPrestiti,Libro,Utente,DataInizio,DataFine) VALUES(?,?,?,?,?)";
+        final String[] data = Database.getData();
+        try(
+
+                Connection conn = DriverManager.getConnection(data[0]);
+                PreparedStatement pstmt = conn.prepareStatement( QUERY )
+        ) {
+            pstmt.setString(1,id);
+            pstmt.setString(2,libro);
+            pstmt.setString(3,utente);
+            pstmt.setString(4,dataI); 
+            pstmt.setString(5,dataF); 
+            pstmt.execute();
+        }catch (SQLException e){
+            e.printStackTrace();
+            String obj = new Gson().toJson(error);
+            return Response.serverError().entity(obj).build();
+        }
+        String obj = new Gson().toJson("Prestito con Id:" + id + " aggiunto con successo");
+        return Response.ok(obj,MediaType.APPLICATION_JSON).build();
+    }
 }
