@@ -13,6 +13,9 @@ public class Library {
     private boolean checkParams(String isbn,String autore, String titolo){
         return (isbn == null || isbn.trim().length() == 0) || (titolo == null || titolo.trim().length() == 0) || (autore == null || autore.trim().length() == 0);
     }
+    private boolean checkParams1(String id,String  libro, String utente,String dataI, String dataF){
+        return (id == null || id.trim().length() == 0) || (libro == null || libro.trim().length() == 0) || (utente == null || utente.trim().length() == 0) || (dataI == null || dataI.trim().length() == 0) || (dataF == null || dataF.trim().length() == 0);
+    }
 
     @GET
     @Path("/all")
@@ -136,13 +139,14 @@ public class Library {
     @Path("/lead")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response lead (
+    public Response addLead (
                            @FormParam("IdPrestiti") String id,
                            @FormParam("Libro")String libro,
-                           @FormParam("Utente") String utente
-                           @FormParam("DataInizio") String dataI)
-                           @FormParam("DataFine") String dataF){
-        if(checkParams(id, libro, utente,dataI,dataF)) {
+                           @FormParam("Utente") String utente,
+                           @FormParam("DataInizio") String dataI,
+                           @FormParam("DataFine") String dataF)
+                           {
+        if(checkParams1(id, libro, utente,dataI,dataF)) {
             String obj = new Gson().toJson("Parameters must be valid");
             return Response.serverError().entity(obj).build();
         }
