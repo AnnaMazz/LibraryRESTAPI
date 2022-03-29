@@ -132,11 +132,12 @@ public class Library {
         String obj = new Gson().toJson("Libro con ISBN:" + isbn + " eliminato con successo");
         return Response.ok(obj,MediaType.APPLICATION_JSON).build();
     }
-     @POST
+    @POST
     @Path("/lead")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response lead (@FormParam("IdPrestiti") String id,
+    public Response lead (
+                           @FormParam("IdPrestiti") String id,
                            @FormParam("Libro")String libro,
                            @FormParam("Utente") String utente
                            @FormParam("DataInizio") String dataI)
