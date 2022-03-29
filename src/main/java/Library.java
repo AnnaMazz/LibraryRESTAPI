@@ -12,7 +12,7 @@ public class Library {
     private final String error = "Server error, contact administrators";
     private boolean checkParams(String isbn,String autore, String titolo){
         return (isbn == null || isbn.trim().length() == 0) || (titolo == null || titolo.trim().length() == 0) || (autore == null || autore.trim().length() == 0);
-    }
+  }
     private boolean checkParams1(String id,String  libro, String utente,String dataI, String dataF){
         return (id == null || id.trim().length() == 0) || (libro == null || libro.trim().length() == 0) || (utente == null || utente.trim().length() == 0) || (dataI == null || dataI.trim().length() == 0) || (dataF == null || dataF.trim().length() == 0);
     }
