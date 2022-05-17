@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response;
 @Path("/book")
 public class Library {
     private final String error = "Server error, contact administrators";
-    private boolean checkParams(String isbn,String autore, String titolo){
+    private boolean checkParams(String isbn,String autore, String titolo, String prezzo){
         return (isbn == null || isbn.trim().length() == 0) || (titolo == null || titolo.trim().length() == 0) || (autore == null || autore.trim().length() == 0)||(prezzo == null || prezzo.trim().length() == 0);
   }
     private boolean checkParams1(String id,String  libro, String utente,String dataI, String dataF){
@@ -22,7 +22,7 @@ public class Library {
     @GET
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response read(){
+    public Response read1(){
         final String QUERY = "SELECT * FROM Libri";
         final List<Book> books = new ArrayList<>();
         final String[] data = Database.getData();
@@ -56,8 +56,9 @@ public class Library {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response update(@FormParam("ISBN") String isbn,
                            @FormParam("Titolo")String titolo,
-                           @FormParam("Autore") String autore){
-        if(checkParams(isbn, titolo, autore)) {
+                           @FormParam("Autore") String autore,
+                           @FormParam("Prezzo") String prezzo){
+        if(checkParams(isbn, titolo, autore,prezzo)) {
             String obj = new Gson().toJson("Parameters must be valid");
             return Response.serverError().entity(obj).build();
         }
@@ -68,6 +69,7 @@ public class Library {
                 Connection conn = DriverManager.getConnection(data[0]);//, data[1], data[2]);
                 PreparedStatement pstmt = conn.prepareStatement( QUERY )
         ) {
+            pstmt.setString(4,prezzo);
             pstmt.setString(1,titolo);
             pstmt.setString(2,autore);
             pstmt.setString(3,isbn);
@@ -88,12 +90,13 @@ public class Library {
     public Response create(
                            @FormParam("ISBN") String isbn,
                            @FormParam("Titolo")String titolo,
-                           @FormParam("Autore") String autore){
-        if(checkParams(isbn, titolo, autore)) {
+                           @FormParam("Autore") String autore,
+                           @FormParam("Prezzo") String prezzo){
+        if(checkParams(isbn, titolo, autore,prezzo)) {
             String obj = new Gson().toJson("Parameters must be valid");
             return Response.serverError().entity(obj).build();
         }
-        final String QUERY = "INSERT INTO Libri(ISBN,Titolo,Autore) VALUES(?,?,?)";
+        final String QUERY = "INSERT INTO Libri(ISBN,Titolo,Autore,Prezzo) VALUES(?,?,?,?)";
         final String[] data = Database.getData();
         try(
 
