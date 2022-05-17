@@ -69,10 +69,11 @@ public class Library {
                 Connection conn = DriverManager.getConnection(data[0]);//, data[1], data[2]);
                 PreparedStatement pstmt = conn.prepareStatement( QUERY )
         ) {
-            pstmt.setString(4,prezzo);
+            
             pstmt.setString(1,titolo);
             pstmt.setString(2,autore);
-            pstmt.setString(3,isbn);
+            pstmt.setString(3,prezzo);
+            pstmt.setString(4,isbn);
             pstmt.execute();
         }catch (SQLException e){
             e.printStackTrace();
@@ -182,7 +183,16 @@ public class Library {
     @GET
     @Path("/prezzo")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response read(){
+    public Response read(){ /*(
+                           @FormParam("ISBN") String isbn,
+                           @FormParam("Titolo")String titolo,
+                           @FormParam("Autore") String autore,
+                           @FormParam("Prezzo") String prezzo)
+        {
+        if(checkParams(isbn, titolo, autore,prezzo)) {
+            String obj = new Gson().toJson("Parameters must be valid");
+            return Response.serverError().entity(obj).build();
+        }*/
         final String QUERY = "SELECT * FROM Libri  WHERE prezzo<? && autore=? ";
         final List<Book> books = new ArrayList<>();
         final String[] data = Database.getData();
@@ -197,7 +207,7 @@ public class Library {
                 book.setISBN(results.getString("ISBN"));
                 book.setTitolo(results.getString("Titolo"));
                 book.setAutore(results.getString("Autore"));
-		    book.setPrezzo(results.getString("Prezzo"));
+		        book.setPrezzo(results.getString("Prezzo"));
                 books.add(book);
 
             }
