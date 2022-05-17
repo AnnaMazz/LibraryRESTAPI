@@ -183,7 +183,7 @@ public class Library {
     @Path("/prezzo")
     @Produces(MediaType.APPLICATION_JSON)
     public Response read(){
-        final String QUERY = "SELECT * FROM Libri  WHERE */prezzo<? && autore=?*/ ";
+        final String QUERY = "SELECT * FROM Libri  WHERE prezzo<? && autore=? ";
         final List<Book> books = new ArrayList<>();
         final String[] data = Database.getData();
         try(
@@ -209,7 +209,4 @@ public class Library {
         String obj = new Gson().toJson(books);
         return Response.status(200).entity(obj).build();
     }
-
-   
-
 }

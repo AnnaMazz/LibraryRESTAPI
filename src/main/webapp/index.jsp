@@ -10,11 +10,12 @@ function loadDoc() {
     //effettuo il parsing della risposta
     let dati=JSON.parse(this.responseText); 
     //inserisco i dati nell'interfaccia
-    let text ="<table border='1'> <th>Autore</th><th>Titolo</th><th>ISBN</th>";
+    let text ="<table border='1'> <th>ISBN</th><th>Autore</th><th>Titolo</th><th>Prezzo</th>";
     for (let x in dati){
+       text +="<td>"+dati[x].ISBN+"</td>";
         text +="<tr><td>"+dati[x].Autore+"</td>";
         text +="<td>"+dati[x].Titolo+"</td>";
-        text +="<td>"+dati[x].ISBN+"</td>";
+        text +="<td>"+dati[x].Prezzo+"</td>";
         text +="<td> <button type='button' onclick='loadUpdate("+dati[x].ISBN+")'> Aggiorna dati </button> </td>";
         text +="<td> <button type='button' onclick='loadDelete("+dati[x].ISBN+")'> Elimina dati </button> </td> </tr>";
     }
