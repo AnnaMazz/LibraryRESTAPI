@@ -11,11 +11,13 @@ import javax.ws.rs.core.Response;
 public class Library {
     private final String error = "Server error, contact administrators";
     private boolean checkParams(String isbn,String autore, String titolo){
-        return (isbn == null || isbn.trim().length() == 0) || (titolo == null || titolo.trim().length() == 0) || (autore == null || autore.trim().length() == 0);
+        return (isbn == null || isbn.trim().length() == 0) || (titolo == null || titolo.trim().length() == 0) || (autore == null || autore.trim().length() == 0)||(prezzo == null || prezzo.trim().length() == 0);
   }
     private boolean checkParams1(String id,String  libro, String utente,String dataI, String dataF){
         return (id == null || id.trim().length() == 0) || (libro == null || libro.trim().length() == 0) || (utente == null || utente.trim().length() == 0) || (dataI == null || dataI.trim().length() == 0) || (dataF == null || dataF.trim().length() == 0);
     }
+   
+
 
     @GET
     @Path("/all")
@@ -32,9 +34,10 @@ public class Library {
             ResultSet results =  pstmt.executeQuery();
             while (results.next()){
                 Book book = new Book();
+                book.setISBN(results.getString("ISBN"));
                 book.setTitolo(results.getString("Titolo"));
                 book.setAutore(results.getString("Autore"));
-                book.setISBN(results.getString("ISBN"));
+                book.setPrezzo(results.getString("Prezzo"));
                 books.add(book);
 
             }
@@ -82,7 +85,8 @@ public class Library {
     @Path("/add")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response create(@FormParam("ISBN") String isbn,
+    public Response create(
+                           @FormParam("ISBN") String isbn,
                            @FormParam("Titolo")String titolo,
                            @FormParam("Autore") String autore){
         if(checkParams(isbn, titolo, autore)) {
@@ -171,4 +175,38 @@ public class Library {
         String obj = new Gson().toJson("Prestito con Id:" + id + " aggiunto con successo");
         return Response.ok(obj,MediaType.APPLICATION_JSON).build();
     }
+
+    @GET
+    @Path("/prezzo")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response read(){
+        final String QUERY = "SELECT * FROM Libri  WHERE */prezzo<? && autore=?*/ ";
+        final List<Book> books = new ArrayList<>();
+        final String[] data = Database.getData();
+        try(
+
+                Connection conn = DriverManager.getConnection(data[0]);
+                PreparedStatement pstmt = conn.prepareStatement( QUERY )
+        ) {
+            ResultSet results =  pstmt.executeQuery();
+            while (results.next()){
+                Book book = new Book();
+                book.setISBN(results.getString("ISBN"));
+                book.setTitolo(results.getString("Titolo"));
+                book.setAutore(results.getString("Autore"));
+		    book.setPrezzo(results.getString("Prezzo"));
+                books.add(book);
+
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            String obj = new Gson().toJson(error);
+            return Response.serverError().entity(obj).build();
+        }
+        String obj = new Gson().toJson(books);
+        return Response.status(200).entity(obj).build();
+    }
+
+   
+
 }

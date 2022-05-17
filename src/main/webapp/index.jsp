@@ -51,6 +51,7 @@ function loadDelete(x) {
 <h2>BIBLIOTECA</h2>
 <button type="button" onclick="loadDoc()">GET Libri</button>
 <button type="button" onclick="loadInsert()">INSERT Libri</button>
+<button type="button" onclick="">Prezzo minore</button>
 <p id="demo"></p>
 
 </body>
